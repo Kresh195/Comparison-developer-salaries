@@ -1,5 +1,6 @@
 import requests
 from itertools import count
+
 from predict_salary import predict_rub_salary
 
 

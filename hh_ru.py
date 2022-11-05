@@ -42,7 +42,7 @@ def get_hh_vacancies_statistics(language):
 
 
 def get_hh_vacancies_languages_statistics():
-    hh_programming_languages = ["Python", "Java", "JavaScript", "Ruby", "PHP", "C++", "C#", "C", "Go"]
+    hh_programming_languages = ["Python", "Java", "JavaScript", "Ruby", "PHP", "C++", "C#", "C", "Go", "1C"]
     hh_salary_statistics = {}
     for language in hh_programming_languages:
         hh_salary_statistics[language] = get_hh_vacancies_statistics(language)

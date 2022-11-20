@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 from predict_salary import predict_rub_salary
 
 
-def get_sj_vacancies(sj_key, page=0, language='Python', profession_id=48, town_id=4, period=30):
+def get_sj_vacancies(page=0, language='Python', profession_id=48, town_id=4, period=30):
+    load_dotenv()
+    sj_key = os.getenv('SJ_KEY')
     sj_url = "https://api.superjob.ru/2.0/vacancies"
     headers = {
         'X-Api-App-Id': sj_key
@@ -24,11 +26,10 @@ def get_sj_vacancies(sj_key, page=0, language='Python', profession_id=48, town_i
     return response.json()
 
 
-def get_sj_vacancies_statistics(sj_key, language="Python"):
+def get_sj_vacancies_statistics(language="Python"):
     average_salaries = []
     for page in count(0, 1):
         vacancies = get_sj_vacancies(
-            sj_key,
             page,
             language=language
         )
@@ -52,18 +53,16 @@ def get_sj_vacancies_statistics(sj_key, language="Python"):
     return about_programming_vacancies
 
 
-def get_sj_vacancies_languages_statistics(sj_key):
+def get_sj_vacancies_languages_statistics():
     sj_programming_languages = ["Python", "Java", "JavaScript", "Ruby", "PHP", "C++", "C#", "C", "Go", "1C"]
     sj_salary_statistics = {}
     for language in sj_programming_languages:
-        sj_salary_statistics[language] = get_sj_vacancies_statistics(sj_key, language)
+        sj_salary_statistics[language] = get_sj_vacancies_statistics(language)
     return sj_salary_statistics
 
 
 def main():
-    load_dotenv()
-    sj_key = os.getenv('SJ_KEY')
-    get_sj_vacancies_languages_statistics(sj_key)
+    get_sj_vacancies_languages_statistics()
 
 
 if __name__ == "__main__":

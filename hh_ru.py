@@ -14,10 +14,10 @@ def get_hh_vacancies_json(language='Python', page=0):
         "period": vacancies_period,
         "page": page
     }
-    vacancies = requests.get(hh_url, params=payload)
-    vacancies.raise_for_status()
-    vacancies_json = vacancies.json()
-    return vacancies_json
+    response = requests.get(hh_url, params=payload)
+    response.raise_for_status()
+    vacancies = response.json()
+    return vacancies
 
 
 def get_hh_vacancies_statistics(language):
@@ -34,7 +34,7 @@ def get_hh_vacancies_statistics(language):
     vacancies_processed = len(average_salaries)
     average_salary = sum(average_salaries)//vacancies_processed
     about_programming_vacancies = {
-        "vacancies_found": get_hh_vacancies_json()["found"],
+        "vacancies_found": vacancies["found"],
         "vacancies_processed": vacancies_processed,
         "average_salary": average_salary
     }
@@ -47,11 +47,3 @@ def get_hh_vacancies_languages_statistics():
     for language in hh_programming_languages:
         hh_salary_statistics[language] = get_hh_vacancies_statistics(language)
     return hh_salary_statistics
-
-
-def main():
-    get_hh_vacancies_languages_statistics()
-
-
-if __name__ == "__main__":
-    main()

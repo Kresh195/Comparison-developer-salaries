@@ -1,8 +1,11 @@
 from __future__ import print_function
+import os
+
+from dotenv import load_dotenv
+from terminaltables import AsciiTable
+
 from hh_ru import get_hh_vacancies_languages_statistics
 from sj_com import get_sj_vacancies_languages_statistics
-
-from terminaltables import AsciiTable
 
 
 def get_table(title, vacancies_languages_statistics):
@@ -20,8 +23,10 @@ def get_table(title, vacancies_languages_statistics):
 
 
 def main():
+    load_dotenv()
+    sj_key = os.getenv('SJ_KEY')
     sj_title = "SuperJob Moscow"
-    sj_table = get_table(sj_title, get_sj_vacancies_languages_statistics())
+    sj_table = get_table(sj_title, get_sj_vacancies_languages_statistics(sj_key))
     print(sj_table)
     hh_title = "HH.ru Moscow"
     sj_table = get_table(hh_title, get_hh_vacancies_languages_statistics())

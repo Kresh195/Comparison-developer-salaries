@@ -1,15 +1,10 @@
-import os
-
 import requests
 from itertools import count
-from dotenv import load_dotenv
 
 from predict_salary import predict_rub_salary
 
 
-def get_sj_vacancies(page=0, language='Python', profession_id=48, town_id=4, period=30):
-    load_dotenv()
-    sj_key = os.getenv('SJ_KEY')
+def get_sj_vacancies(sj_key, page=0, language='Python', profession_id=48, town_id=4, period=30):
     sj_url = "https://api.superjob.ru/2.0/vacancies"
     headers = {
         'X-Api-App-Id': sj_key
@@ -26,10 +21,11 @@ def get_sj_vacancies(page=0, language='Python', profession_id=48, town_id=4, per
     return response.json()
 
 
-def get_sj_vacancies_statistics(language="Python"):
+def get_sj_vacancies_statistics(sj_key, language="Python"):
     average_salaries = []
     for page in count(0, 1):
         vacancies = get_sj_vacancies(
+            sj_key,
             page,
             language=language
         )
@@ -41,7 +37,7 @@ def get_sj_vacancies_statistics(language="Python"):
         if not vacancies["more"]:
             break
     vacancies_processed = len(average_salaries)
-    if vacancies_processed == 0:
+    if not vacancies_processed:
         average_salary = 0
     else:
         average_salary = sum(average_salaries) // vacancies_processed
@@ -53,17 +49,9 @@ def get_sj_vacancies_statistics(language="Python"):
     return about_programming_vacancies
 
 
-def get_sj_vacancies_languages_statistics():
+def get_sj_vacancies_languages_statistics(sj_key):
     sj_programming_languages = ["Python", "Java", "JavaScript", "Ruby", "PHP", "C++", "C#", "C", "Go", "1C"]
     sj_salary_statistics = {}
     for language in sj_programming_languages:
-        sj_salary_statistics[language] = get_sj_vacancies_statistics(language)
+        sj_salary_statistics[language] = get_sj_vacancies_statistics(sj_key, language)
     return sj_salary_statistics
-
-
-def main():
-    get_sj_vacancies_languages_statistics()
-
-
-if __name__ == "__main__":
-    main()
